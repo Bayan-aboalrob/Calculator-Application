@@ -41,6 +41,9 @@ namespace CalculatorApp.Tests
         [InlineData(",700")]
         [InlineData(",300,")]
         [InlineData("100,")]
+        [InlineData("\n700")]
+        [InlineData("100\n,300,")]
+        [InlineData("100,300\n")]
         public void Returns_Argument_Exception(string numbers)
         {
             //Assert
@@ -52,6 +55,16 @@ namespace CalculatorApp.Tests
         [InlineData("100,300",400)]
         [InlineData("100,500,900,1000",2500)]
         public void Returns_Correct_Sum_When_More_Than_Two_Numbers_Inside_A_String(string numbers,int expectedSum)
+        {
+            //Assert
+            Assert.Equal(_sut.add(numbers), expectedSum);
+
+        }
+        [Theory]
+        [InlineData("700\n100,300",1100)]
+        [InlineData("100,300", 400)]
+        [InlineData("100\n500\n900,1000", 2500)]
+        public void Handle_different_delimiters(string numbers, int expectedSum)
         {
             //Assert
             Assert.Equal(_sut.add(numbers), expectedSum);
