@@ -19,7 +19,7 @@ namespace CalculatorApp
             if (IsValidInput)
             {
                 string[] splittedInput = DataSplit(numbers);
-                if(splittedInput.Length < 3)
+                if(splittedInput.Length >=1)
                 {
                     int[] arrayOfNumbers = InputParsing(splittedInput);
                     foreach (int number in arrayOfNumbers)
