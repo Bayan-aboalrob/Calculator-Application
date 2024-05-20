@@ -18,8 +18,9 @@ namespace CalculatorApp
             bool IsValidInput = ValidateInput(numbers);
             if (IsValidInput)
             {
-                string[] splittedInput = DataSplit(numbers);
-                if(splittedInput.Length >=1)
+                string[] delimiters = { "\n", "," };
+                string[] splittedInput = DataSplit(numbers, delimiters);
+                if (splittedInput.Length >= 1)
                 {
                     int[] arrayOfNumbers = InputParsing(splittedInput);
                     foreach (int number in arrayOfNumbers)
@@ -39,9 +40,9 @@ namespace CalculatorApp
 
             return sum;
         }
-        private string[] DataSplit(string input)
+        private string[] DataSplit(string input, string[] delimiters)
         {
-            string[] splitedInput = input.Split(',');
+            string[] splitedInput = input.Split(delimiters, StringSplitOptions.None);
             return splitedInput;
         }
 
@@ -58,7 +59,7 @@ namespace CalculatorApp
 
         private bool ValidateInput(string numbers)
         {
-            if (numbers.StartsWith(",") || numbers.EndsWith(","))
+            if (numbers.StartsWith(",") || numbers.EndsWith(",") || numbers.StartsWith("\n") || numbers.EndsWith("\n") || numbers.Contains("\n,") || numbers.Contains(",\n"))
             {
                 return false;
             }
