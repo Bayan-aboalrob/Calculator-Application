@@ -6,26 +6,26 @@ using System.Threading.Tasks;
 
 namespace CalculatorApp
 {
-    internal class Calculator
+    public class Calculator
     {
         public int add(string numbers)
         {
             int sum = 0;
-            if (numbers.Length == 0)
+            if (string.IsNullOrEmpty(numbers) || numbers.Length == 0)
             {
                 return sum;
             }
-            if(numbers.Length< 3)
+            bool IsValidInput = ValidateInput(numbers);
+            if (IsValidInput)
             {
-                bool IsValidInput = ValidateInput(numbers);
-                if (IsValidInput)
+                string[] splittedInput = DataSplit(numbers);
+                if (splittedInput.Length >=1)
                 {
-                    int[] arrayOfNumbers = InputParsing(numbers);
+                    int[] arrayOfNumbers = InputParsing(splittedInput);
                     foreach (int number in arrayOfNumbers)
                     {
                         sum += number;
                     }
-
                 }
                 else
                 {
@@ -34,22 +34,26 @@ namespace CalculatorApp
             }
             else
             {
-                throw new Exception("More than two numbers in the string");
+                throw new ArgumentException("Invalid Input!");
             }
-            
+
             return sum;
         }
-
-        private int[] InputParsing(string numbers)
+        private string[] DataSplit(string input)
         {
-            int[] parsedNumbers= new int[numbers.Length];
-            for(int i=0; i<numbers.Length; i++)
+            string[] splitedInput = input.Split(',');
+            return splitedInput;
+        }
+
+        private int[] InputParsing(string[] numbers)
+        {
+            int[] parsedNumbers = new int[numbers.Length];
+            for (int i = 0; i < numbers.Length; i++)
             {
-                int.TryParse(numbers, out parsedNumbers[i]);
+                int.TryParse(numbers[i], out parsedNumbers[i]);
 
             }
             return parsedNumbers;
-
         }
 
         private bool ValidateInput(string numbers)

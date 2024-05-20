@@ -29,9 +29,8 @@ namespace CalculatorApp.Tests
             Assert.Equal(actualSum, 0);
 
         }
-        [Theory]
-        [InlineData("1",1)]
-        [InlineData("100,200",300)]
+        [InlineData("1", 1)]
+        [InlineData("100,200", 300)]
         [InlineData("", 0)]
         public void Returns_Correct_Sum_When_Valid_Input_Passed(string numbers, int expectedSum)
         {
@@ -48,7 +47,15 @@ namespace CalculatorApp.Tests
             Assert.Throws<ArgumentException>(() => _sut.add(numbers));
 
         }
+        [Theory]
+        [InlineData("700,100,300",1100)]
+        [InlineData("100,300",400)]
+        [InlineData("100,500,900,1000",2500)]
+        public void Returns_Correct_Sum_When_More_Than_Two_Numbers_Inside_A_String(string numbers,int expectedSum)
+        {
+            //Assert
+            Assert.Equal(_sut.add(numbers), expectedSum);
 
-
+        }
     }
 }
