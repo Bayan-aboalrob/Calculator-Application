@@ -43,6 +43,9 @@ namespace CalculatorApp
                     }
                     foreach (int number in arrayOfNumbers)
                     {
+                        if (number > 1000)
+                            continue;
+                        
                         sum += number;
                     }
                 }
