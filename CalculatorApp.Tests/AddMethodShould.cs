@@ -5,8 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 using CalculatorApp;
-
-
+using FluentAssertions;
 namespace CalculatorApp.Tests
 {
     public class AddMethodShould
@@ -50,11 +49,10 @@ namespace CalculatorApp.Tests
             Assert.Throws<ArgumentException>(() => _sut.add(numbers));
 
         }
-        [Theory]
-        [InlineData("700,100,300",1100)]
-        [InlineData("100,300",400)]
-        [InlineData("100,500,900,1000",2500)]
-        public void Returns_Correct_Sum_When_More_Than_Two_Numbers_Inside_A_String(string numbers,int expectedSum)
+        [InlineData("700,100,300", 1100)]
+        [InlineData("100,300", 400)]
+        [InlineData("100,500,900,1000", 2500)]
+        public void Returns_Correct_Sum_When_More_Than_Two_Numbers_Inside_A_String(string numbers, int expectedSum)
         {
             //Assert
             Assert.Equal(_sut.add(numbers), expectedSum);
@@ -62,6 +60,7 @@ namespace CalculatorApp.Tests
         }
         [Theory]
         [InlineData("700\n100,300",1100)]
+        [InlineData("700\n100,300", 1100)]
         [InlineData("100,300", 400)]
         [InlineData("100\n500\n900,1000", 2500)]
         public void Handle_different_delimiters(string numbers, int expectedSum)
@@ -69,6 +68,20 @@ namespace CalculatorApp.Tests
             //Assert
             Assert.Equal(_sut.add(numbers), expectedSum);
 
+        }
+        [Theory]
+        [InlineData("//;\n1;2", 3)]
+        [InlineData("//|\n1|2|3", 6)]
+        [InlineData("//,\n1,2,3", 6)]
+        [InlineData("//;\n1;2;3", 6)]
+        [InlineData("1,2,3", 6)]
+        [InlineData("1\n2,3", 6)]
+        [InlineData("", 0)]
+        public void SupportDifferentDelimiters(string input, int expectedSum)
+        {
+            var result = _sut.add(input);
+
+            result.Should().Be(expectedSum);
         }
     }
 }
