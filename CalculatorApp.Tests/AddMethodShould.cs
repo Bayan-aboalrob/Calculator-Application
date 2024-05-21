@@ -83,5 +83,21 @@ namespace CalculatorApp.Tests
 
             result.Should().Be(expectedSum);
         }
+        [Theory]
+        [InlineData("//;\n1;-2", new[] { -2 })]
+        [InlineData("//|\n1|-2|3", new[] { -2 })]
+        [InlineData("//,\n1,-2,3", new[] { -2 })]
+        [InlineData("//;\n1;-2;-3", new[] { -2, -3 })]
+        [InlineData("1,-2,-3", new[] { -2, -3 })]
+        [InlineData("1\n-2,3", new[] { -2 })]
+        [InlineData("-1", new[] { -1 })]
+        public void Returns_Exception_When_String_Contains_Negative_Numbers(string input, int[] expectedNegatives)
+        {
+            // Act
+            var exception = Assert.Throws<ArgumentException>(() => _sut.add(input));
+
+            // Assert
+            exception.Message.Should().Be($"Negatives not allowed: {string.Join(", ", expectedNegatives)}");
+        }
     }
 }
