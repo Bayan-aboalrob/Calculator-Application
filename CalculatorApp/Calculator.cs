@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CalculatorApp
@@ -16,9 +17,21 @@ namespace CalculatorApp
                 return sum;
             }
             bool IsValidInput = ValidateInput(numbers);
+            string[] delimiters = { "\n", "," };
             if (IsValidInput)
             {
-                string[] delimiters = { "\n", "," };
+                if (numbers.StartsWith("//"))
+                {
+                    int EndOfDelimter = numbers.IndexOf("\n");
+                    if (EndOfDelimter == -1)
+                    {
+                        throw new ArgumentException("Invalid input format for custom delimiter.");
+                    }
+                    string delimiterSection = numbers.Substring(2, EndOfDelimter-2);
+                    string stringnumber = numbers.Substring(EndOfDelimter+1 );
+                    delimiters = delimiterSection.ToCharArray().Select(c => c.ToString()).ToArray();
+
+                }
                 string[] splittedInput = DataSplit(numbers, delimiters);
                 if (splittedInput.Length >= 1)
                 {
@@ -59,7 +72,7 @@ namespace CalculatorApp
 
         private bool ValidateInput(string numbers)
         {
-            if (numbers.StartsWith(",") || numbers.EndsWith(",") || numbers.StartsWith("\n") || numbers.EndsWith("\n") || numbers.Contains("\n,") || numbers.Contains(",\n"))
+            if (numbers.StartsWith(",") || numbers.EndsWith(",") || numbers.StartsWith("\n") || numbers.EndsWith("\n") || (!numbers.StartsWith("//")&&numbers.Contains("\n,")) || !numbers.StartsWith("//") && (numbers.Contains(",\n")))
             {
                 return false;
             }
