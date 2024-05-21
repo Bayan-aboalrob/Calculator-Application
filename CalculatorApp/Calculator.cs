@@ -12,7 +12,7 @@ namespace CalculatorApp
         public int add(string numbers)
         {
             int sum = 0;
-            if ( string.IsNullOrEmpty(numbers) || numbers.Length == 0)
+            if (string.IsNullOrEmpty(numbers) || numbers.Length == 0)
             {
                 return sum;
             }
@@ -27,8 +27,8 @@ namespace CalculatorApp
                     {
                         throw new ArgumentException("Invalid input format for custom delimiter.");
                     }
-                    string delimiterSection = numbers.Substring(2, EndOfDelimter-2);
-                    string stringnumber = numbers.Substring(EndOfDelimter+1 );
+                    string delimiterSection = numbers.Substring(2, EndOfDelimter - 2);
+                    string stringnumber = numbers.Substring(EndOfDelimter + 1);
                     delimiters = delimiterSection.ToCharArray().Select(c => c.ToString()).ToArray();
 
                 }
@@ -36,6 +36,11 @@ namespace CalculatorApp
                 if (splittedInput.Length >= 1)
                 {
                     int[] arrayOfNumbers = InputParsing(splittedInput);
+                    var negativeNumbers = ContainsNegativeNumbers(arrayOfNumbers);
+                    if (negativeNumbers.Any())
+                    {
+                        throw new ArgumentException("Negatives not allowed: " + string.Join(", ", negativeNumbers));
+                    }
                     foreach (int number in arrayOfNumbers)
                     {
                         sum += number;
@@ -61,8 +66,8 @@ namespace CalculatorApp
 
         private int[] InputParsing(string[] numbers)
         {
-            int[] parsedNumbers= new int[numbers.Length];
-            for(int i=0; i<numbers.Length; i++)
+            int[] parsedNumbers = new int[numbers.Length];
+            for (int i = 0; i < numbers.Length; i++)
             {
                 int.TryParse(numbers[i], out parsedNumbers[i]);
 
@@ -72,7 +77,7 @@ namespace CalculatorApp
 
         private bool ValidateInput(string numbers)
         {
-            if (numbers.StartsWith(",") || numbers.EndsWith(",") || numbers.StartsWith("\n") || numbers.EndsWith("\n") || (!numbers.StartsWith("//")&&numbers.Contains("\n,")) || !numbers.StartsWith("//") && (numbers.Contains(",\n")))
+            if (numbers.StartsWith(",") || numbers.EndsWith(",") || numbers.StartsWith("\n") || numbers.EndsWith("\n") || (!numbers.StartsWith("//") && numbers.Contains("\n,")) || !numbers.StartsWith("//") && (numbers.Contains(",\n")))
             {
                 return false;
             }
@@ -81,6 +86,18 @@ namespace CalculatorApp
                 return true;
             }
 
+        }
+        private List<int> ContainsNegativeNumbers(int[] numbers)
+        {
+            List<int> negativeNumbers = new List<int>(); ;
+            foreach (int num in numbers)
+            {
+                if (num < 0)
+                {
+                    negativeNumbers.Add(num);
+                }
+            }
+            return negativeNumbers;
         }
     }
 }
