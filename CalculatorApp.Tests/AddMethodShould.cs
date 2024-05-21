@@ -61,6 +61,7 @@ namespace CalculatorApp.Tests
         [Theory]
         [InlineData("700\n100,300",1100)]
         [InlineData("700\n100,300", 1100)]
+        [InlineData("700\n100,300", 1100)]
         [InlineData("100,300", 400)]
         [InlineData("100\n500\n900,1000", 2500)]
         public void Handle_different_delimiters(string numbers, int expectedSum)
@@ -98,6 +99,18 @@ namespace CalculatorApp.Tests
 
             // Assert
             exception.Message.Should().Be($"Negatives not allowed: {string.Join(", ", expectedNegatives)}");
+        }
+        [Theory]
+        [InlineData("700\n100,1001", 800)]
+        [InlineData("700\n10000,300", 1000)]
+        [InlineData("5555,30", 30)]
+        [InlineData("//;\n11111;2", 2)]
+        [InlineData("//|\n1|2|33333", 3)]
+        public void IgnoreNumbersLargerThanOneThousand(string numbers, int expectedSum)
+        {
+            //Assert
+            Assert.Equal(_sut.add(numbers), expectedSum);
+
         }
     }
 }
